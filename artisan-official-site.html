@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Artisan Design System</title>
+  <style>
+    :root {
+      --primary: #005cf1;
+      --secondary: #f9a063;
+      --background: #f5f7fa;
+      --surface: #ffffff;
+      --title: #000000;
+      --text: #333333;
+      --muted: #666666;
+      --disabled: #999999;
+      --border: #e2e8f0;
+      --success: #00c27d;
+      --danger: #f27c78;
+      --info: #73767a;
+      --shadow-1: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.08);
+      color-scheme: light;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--background);
+      font-family: "PingFang SC", "Source Han Sans SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .site {
+      max-width: 1440px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: var(--surface);
+      box-shadow: 0 0 0 1px rgba(226, 232, 240, 0.72);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      padding: 0 56px;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: saturate(160%) blur(10px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 188px;
+      color: var(--title);
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .logo {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      height: 100%;
+      font-weight: 600;
+    }
+
+    .nav a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      height: 100%;
+      color: var(--text);
+    }
+
+    .nav a.active { color: var(--primary); }
+    .nav a.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      border-radius: 999px 999px 0 0;
+      background: var(--primary);
+    }
+
+    .search {
+      margin-left: auto;
+      width: 308px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      color: var(--disabled);
+      background: #f7f8fa;
+      border: 1px solid #edf0f5;
+      border-radius: 999px;
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 112px;
+      justify-content: flex-end;
+      font-weight: 600;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 50% 38%, #f6c6aa 0 18%, transparent 19%),
+        linear-gradient(145deg, #1f2937 0 48%, #e5e7eb 49% 100%);
+      border: 2px solid #ffffff;
+      box-shadow: var(--shadow-1);
+    }
+
+    main { overflow: hidden; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 560px;
+      gap: 56px;
+      align-items: center;
+      padding: 92px 96px 64px;
+      background:
+        radial-gradient(circle at 76% 36%, rgba(0, 92, 241, 0.08), transparent 28%),
+        linear-gradient(180deg, #ffffff 0%, #ffffff 70%, #fbfcfe 100%);
+    }
+
+    .hero h1 {
+      margin: 0 0 18px;
+      color: var(--title);
+      font-size: 48px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .hero h2 {
+      margin: 0 0 18px;
+      color: var(--text);
+      font-size: 26px;
+      line-height: 1.3;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 20px;
+      border-radius: 8px;
+      border: 1px solid #d9d9d9;
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn.primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(0, 92, 241, 0.18);
+    }
+
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-1); }
+
+    .system-visual {
+      position: relative;
+      height: 380px;
+      display: grid;
+      place-items: center;
+    }
+
+    .grid-plane {
+      position: absolute;
+      width: 460px;
+      height: 300px;
+      transform: rotateX(58deg) rotateZ(-42deg);
+      transform-style: preserve-3d;
+      border: 1px solid rgba(153, 153, 153, 0.18);
+      background:
+        linear-gradient(rgba(226, 232, 240, 0.8) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(226, 232, 240, 0.8) 1px, transparent 1px);
+      background-size: 58px 58px;
+    }
+
+    .cube {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border: 2px solid rgba(226, 232, 240, 0.92);
+      background: rgba(255, 255, 255, 0.7);
+      transform: rotateX(58deg) rotateZ(-42deg);
+      box-shadow: var(--shadow-1);
+    }
+
+    .cube.dark { background: #062a17; border-color: rgba(0, 194, 125, 0.35); }
+    .cube.blue { background: rgba(0, 92, 241, 0.12); border-color: rgba(0, 92, 241, 0.22); }
+    .cube.one { top: 86px; left: 86px; }
+    .cube.two { top: 150px; left: 170px; }
+    .cube.three { top: 105px; right: 120px; }
+    .cube.four { bottom: 80px; right: 192px; }
+
+    .dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--secondary);
+      box-shadow: 0 0 0 6px rgba(249, 160, 99, 0.12);
+    }
+
+    .dot.a { top: 90px; left: 110px; }
+    .dot.b { top: 156px; left: 210px; }
+    .dot.c { bottom: 96px; right: 118px; }
+
+    .metrics {
+      margin: 0 96px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-1);
+    }
+
+    .metric {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 16px;
+      align-items: center;
+      min-height: 112px;
+      padding: 20px 28px;
+      border-right: 1px solid #edf0f5;
+    }
+
+    .metric:last-child { border-right: 0; }
+
+    .icon-box {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      background: rgba(0, 92, 241, 0.08);
+      border: 1px solid rgba(0, 92, 241, 0.16);
+      border-radius: 8px;
+    }
+
+    .metric:nth-child(3) .icon-box {
+      color: var(--success);
+      background: rgba(0, 194, 125, 0.08);
+      border-color: rgba(0, 194, 125, 0.16);
+    }
+
+    .metric:nth-child(4) .icon-box {
+      color: var(--secondary);
+      background: rgba(249, 160, 99, 0.1);
+      border-color: rgba(249, 160, 99, 0.18);
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--title);
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 600;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 4px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .section {
+      padding: 72px 96px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .section h3 {
+      margin: 0 0 28px;
+      color: var(--title);
+      font-size: 26px;
+      line-height: 1.3;
+      font-weight: 600;
+    }
+
+    .foundation-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .foundation-card {
+      min-height: 150px;
+      display: grid;
+      place-items: center;
+      gap: 10px;
+      padding: 20px;
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: var(--shadow-1);
+    }
+
+    .foundation-card svg { width: 32px; height: 32px; color: var(--text); }
+    .foundation-card b { display: block; font-size: 16px; }
+    .foundation-card span { display: block; color: var(--muted); font-size: 12px; }
+
+    .component-band {
+      padding: 72px 96px;
+      background: #fbfcfe;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .component-grid {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar-card, .preview-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-1);
+    }
+
+    .sidebar-card { padding: 16px; }
+
+    .side-title {
+      margin: 4px 0 10px;
+      color: var(--title);
+      font-weight: 600;
+    }
+
+    .side-link {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: var(--muted);
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .side-link.active {
+      color: var(--primary);
+      background: #eef5ff;
+    }
+
+    .preview-card { padding: 24px; }
+
+    .preview-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .preview-head h4 {
+      margin: 0 0 8px;
+      color: var(--title);
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .preview-head p { margin: 0; color: var(--muted); font-weight: 600; }
+    .version { color: var(--muted); font-size: 12px; font-weight: 600; white-space: nowrap; }
+
+    .tabs {
+      display: flex;
+      gap: 32px;
+      margin-top: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab {
+      position: relative;
+      padding: 0 0 12px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .tab.active { color: var(--primary); }
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 999px 999px 0 0;
+    }
+
+    .demo-card {
+      margin-top: 20px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .demo-card h5 {
+      margin: 0 0 18px;
+      color: var(--title);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .button-row, .status-row, .tool-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .btn.secondary { color: var(--muted); background: var(--surface); }
+    .btn.text { border-color: transparent; color: var(--primary); background: transparent; }
+    .btn.success { color: var(--success); background: rgba(0, 194, 125, 0.08); border-color: rgba(0, 194, 125, 0.16); }
+    .btn.warning { color: var(--secondary); background: rgba(249, 160, 99, 0.08); border-color: rgba(249, 160, 99, 0.18); }
+    .btn.danger { color: var(--danger); background: rgba(242, 124, 120, 0.08); border-color: rgba(242, 124, 120, 0.16); }
+    .btn.disabled { opacity: 0.45; cursor: not-allowed; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid #ebeef5;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    th {
+      height: 45px;
+      padding: 0 12px;
+      text-align: left;
+      color: var(--text);
+      background: #f1f6fe;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    th:first-child, td:first-child { padding-left: 20px; }
+    th:last-child, td:last-child { padding-right: 20px; }
+
+    td {
+      height: 50px;
+      padding: 0 12px;
+      color: var(--text);
+      border-top: 1px solid #ebeef5;
+      white-space: nowrap;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: var(--success);
+      background: rgba(0, 194, 125, 0.1);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .tag.danger {
+      color: var(--danger);
+      background: rgba(242, 124, 120, 0.1);
+    }
+
+    .link {
+      color: var(--primary);
+      font-weight: 600;
+      margin-right: 12px;
+    }
+
+    .footer {
+      padding: 72px 96px 32px;
+      background: var(--surface);
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(4, 1fr);
+      gap: 56px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .footer p {
+      max-width: 320px;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.8;
+    }
+
+    .footer h6 {
+      margin: 0 0 16px;
+      color: var(--title);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .footer a {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .socials { display: flex; gap: 12px; }
+
+    .social {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text);
+      background: var(--surface);
+    }
+
+    .copyright {
+      display: flex;
+      gap: 48px;
+      padding-top: 28px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1100px) {
+      .topbar { padding: 0 24px; gap: 20px; }
+      .search { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 64px 40px 48px; }
+      .system-visual { height: 300px; }
+      .metrics, .section, .component-band, .footer { margin: 0; padding-left: 40px; padding-right: 40px; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric:nth-child(2) { border-right: 0; }
+      .metric:nth-child(1), .metric:nth-child(2) { border-bottom: 1px solid #edf0f5; }
+      .foundation-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .component-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .site { min-width: 0; }
+      .topbar { height: auto; flex-wrap: wrap; padding: 14px 20px; }
+      .brand { min-width: auto; margin-right: auto; }
+      .nav { order: 3; width: 100%; gap: 24px; height: 44px; }
+      .user { min-width: auto; }
+      .hero { padding: 48px 24px 36px; }
+      .hero h1 { font-size: 36px; }
+      .hero h2 { font-size: 22px; }
+      .system-visual { display: none; }
+      .metrics { grid-template-columns: 1fr; padding-left: 24px; padding-right: 24px; }
+      .metric { border-right: 0; border-bottom: 1px solid #edf0f5; }
+      .metric:last-child { border-bottom: 0; }
+      .section, .component-band, .footer { padding: 48px 24px; }
+      .foundation-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .preview-head { display: block; }
+      .version { display: block; margin-top: 12px; }
+      .tabs { overflow-x: auto; }
+      .footer-top { grid-template-columns: 1fr; gap: 24px; }
+      .copyright { flex-wrap: wrap; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="site">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Artisan 首页">
+        <span class="logo" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 3 30 28h-6.2L16 14.4 8.2 28H2L16 3Z" fill="#005CF1"/>
+            <path d="M16 9.5 25 25h-5.2L16 18.4 12.2 25H7l9-15.5Z" fill="#58A6FF"/>
+            <path d="M16 15.5 21.5 25h-11L16 15.5Z" fill="#FFFFFF"/>
+          </svg>
+        </span>
+        ARTiSAN
+      </a>
+      <nav class="nav" aria-label="主导航">
+        <a class="active" href="#top">首页</a>
+        <a href="#components">组件</a>
+        <a href="#resources">资源</a>
+      </nav>
+      <label class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m21 21-4.3-4.3m2.3-5.2a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input aria-label="搜索" placeholder="搜索组件、指南、资源..." style="width:100%;border:0;background:transparent;outline:0;color:#333;" />
+      </label>
+      <div class="user">
+        <span class="avatar" aria-hidden="true"></span>
+        <span>张小帅</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div>
+          <h1>Artisan Design System</h1>
+          <h2>适合进行科技管理的设计语言</h2>
+          <p>一致、可复用、可扩展的企业级设计系统，帮助团队高效构建优秀的数字化产品。</p>
+          <div class="actions">
+            <a class="btn primary" href="#components">探索组件</a>
+            <a class="btn" href="#foundation">开始使用</a>
+          </div>
+        </div>
+        <div class="system-visual" aria-hidden="true">
+          <div class="grid-plane"></div>
+          <div class="cube one blue"></div>
+          <div class="cube two"></div>
+          <div class="cube three dark"></div>
+          <div class="cube four dark"></div>
+          <span class="dot a"></span>
+          <span class="dot b"></span>
+          <span class="dot c"></span>
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="设计系统指标">
+        <article class="metric">
+          <span class="icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 1 0 9 9h-9V3Z" stroke="currentColor" stroke-width="2"/><path d="M15 3.6A9 9 0 0 1 20.4 9H15V3.6Z" stroke="currentColor" stroke-width="2"/></svg>
+          </span>
+          <span><strong>120+</strong><span>标准组件</span><small>高质量可复用组件</small></span>
+        </article>
+        <article class="metric">
+          <span class="icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/><path d="M8 8h3v3H8zM13 8h3v3h-3zM8 13h3v3H8zM13 13h3v3h-3z" fill="currentColor"/></svg>
+          </span>
+          <span><strong>300+</strong><span>设计 Token</span><small>覆盖全局设计变量</small></span>
+        </article>
+        <article class="metric">
+          <span class="icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="m12 3 2.5 5 5.5.8-4 3.9 1 5.4-5-2.7-5 2.7 1-5.4-4-3.9 5.5-.8L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </span>
+          <span><strong>40+</strong><span>业务组件</span><small>开箱即用业务组件</small></span>
+        </article>
+        <article class="metric">
+          <span class="icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span><strong>20+</strong><span>设计规范</span><small>沉淀最佳实践规范</small></span>
+        </article>
+      </section>
+
+      <section id="foundation" class="section">
+        <p class="eyebrow">Foundation</p>
+        <h3>构建一致的设计基础</h3>
+        <div class="foundation-grid">
+          <article class="foundation-card">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3v18" stroke="currentColor" stroke-width="2"/></svg>
+            <span><b>色彩</b><span>Color</span></span>
+          </article>
+          <article class="foundation-card">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M5 5h14M12 5v14M8 19h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span><b>字体</b><span>Typography</span></span>
+          </article>
+          <article class="foundation-card">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 4v6M16 9v6M8 14v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span><b>间距</b><span>Spacing</span></span>
+          </article>
+          <article class="foundation-card">
+            <svg viewBox="0 0 24 24" fill="none"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" stroke="currentColor" stroke-width="2"/><path d="M12 12 4.4 7.7M12 12l7.6-4.3M12 12v8.5" stroke="currentColor" stroke-width="2"/></svg>
+            <span><b>圆角</b><span>Radius</span></span>
+          </article>
+          <article class="foundation-card">
+            <svg viewBox="0 0 24 24" fill="none"><path d="m12 4 8 4-8 4-8-4 8-4Z" stroke="currentColor" stroke-width="2"/><path d="m4 12 8 4 8-4M4 16l8 4 8-4" stroke="currentColor" stroke-width="2"/></svg>
+            <span><b>阴影</b><span>Shadow</span></span>
+          </article>
+          <article class="foundation-card">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="7" r="3" stroke="currentColor" stroke-width="2"/><circle cx="7" cy="17" r="3" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="17" r="3" stroke="currentColor" stroke-width="2"/></svg>
+            <span><b>图标</b><span>Icon</span></span>
+          </article>
+        </div>
+      </section>
+
+      <section id="components" class="component-band">
+        <p class="eyebrow">Components</p>
+        <h3>高复用的企业级组件样例</h3>
+        <div class="component-grid">
+          <aside class="sidebar-card">
+            <div class="side-title">基础组件</div>
+            <a class="side-link active" href="#components">Button 按钮</a>
+            <a class="side-link" href="#components">Icon 图标</a>
+            <a class="side-link" href="#components">Typography 排版</a>
+            <div class="side-title">数据展示</div>
+            <a class="side-link active" href="#table">Table 表格</a>
+            <a class="side-link" href="#table">标签页</a>
+            <a class="side-link" href="#table">进度条</a>
+          </aside>
+          <div class="preview-card">
+            <div class="preview-head">
+              <div>
+                <h4>Button 按钮</h4>
+                <p>按钮用于触发一个操作，例如提交表单、打开对话框、触发操作等。</p>
+              </div>
+              <span class="version">版本 2.1.0</span>
+            </div>
+            <div class="tabs">
+              <span class="tab active">概览</span>
+              <span class="tab">API</span>
+              <span class="tab">设计指南</span>
+              <span class="tab">开发指南</span>
+            </div>
+            <div class="demo-card">
+              <h5>示例</h5>
+              <div class="button-row">
+                <button class="btn primary">主要按钮</button>
+                <button class="btn primary" style="opacity:.68">主要按钮</button>
+                <button class="btn secondary">次要按钮</button>
+                <button class="btn text">文本按钮</button>
+                <button class="btn text">链接按钮</button>
+              </div>
+              <div class="status-row">
+                <button class="btn success">成功</button>
+                <button class="btn warning">警告</button>
+                <button class="btn danger">危险</button>
+                <button class="btn disabled">禁用</button>
+              </div>
+              <div class="tool-row">
+                <button class="btn secondary">搜索</button>
+                <button class="btn secondary">下载</button>
+                <button class="btn secondary">设置</button>
+              </div>
+            </div>
+            <div id="table" class="demo-card">
+              <h5>基础表格</h5>
+              <table>
+                <thead>
+                  <tr>
+                    <th>序号</th>
+                    <th>姓名</th>
+                    <th>部门</th>
+                    <th>职务</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>张三</td><td>技术部</td><td>前端工程师</td><td><span class="tag">在职</span></td><td><a class="link">编辑</a><a class="link">删除</a></td></tr>
+                  <tr><td>2</td><td>李四</td><td>产品部</td><td>产品经理</td><td><span class="tag">在职</span></td><td><a class="link">编辑</a><a class="link">删除</a></td></tr>
+                  <tr><td>3</td><td>王五</td><td>设计部</td><td>设计师</td><td><span class="tag danger">离职</span></td><td><a class="link">编辑</a><a class="link">删除</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="resources" class="footer">
+      <div class="footer-top">
+        <div>
+          <a class="brand" href="#top">
+            <span class="logo" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M16 3 30 28h-6.2L16 14.4 8.2 28H2L16 3Z" fill="#005CF1"/>
+                <path d="M16 9.5 25 25h-5.2L16 18.4 12.2 25H7l9-15.5Z" fill="#58A6FF"/>
+                <path d="M16 15.5 21.5 25h-11L16 15.5Z" fill="#FFFFFF"/>
+              </svg>
+            </span>
+            ARTiSAN
+          </a>
+          <p>一致、可复用、可扩展的设计系统，助力团队高效构建优秀的数字化产品。</p>
+        </div>
+        <div><h6>产品</h6><a>组件</a><a>设计规范</a><a>资源中心</a></div>
+        <div><h6>支持</h6><a>开发指南</a><a>更新日志</a><a>常见问题</a></div>
+        <div><h6>关于</h6><a>关于我们</a><a>加入我们</a><a>联系我们</a></div>
+        <div>
+          <h6>关注我们</h6>
+          <div class="socials">
+            <span class="social">G</span>
+            <span class="social">M</span>
+            <span class="social">B</span>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        <span>© 2026 Artisan Design. All rights reserved.</span>
+        <span>隐私条款</span>
+        <span>使用条款</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
